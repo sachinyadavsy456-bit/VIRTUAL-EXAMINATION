@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechVault - Premium Electronics Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0F172A;
+            --secondary: #1E293B;
+            --accent: #3B82F6;
+            --accent-light: #60A5FA;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --text: #F8FAFC;
+            --text-muted: #94A3B8;
+            --card-bg: #1E293B;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .bg-animation::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation: float 12s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, -30px) rotate(180deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1.2rem 5%;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-light);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--success);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 5rem 5% 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--border);
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .hero-visual {
+            position: relative;
+            animation: fadeInRight 1s ease-out 0.3s backwards;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .phone-showcase {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-card {
+            position: absolute;
+            width: 250px;
+            height: 400px;
+            background: linear-gradient(135deg, var(--secondary), var(--card-bg));
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+            padding: 20px;
+        }
+
+        .phone-card:nth-child(1) {
+            transform: translateX(-100px) rotate(-10deg);
+            z-index: 1;
+        }
+
+        .phone-card:nth-child(2) {
+            z-index: 3;
+        }
+
+        .phone-card:nth-child(3) {
+            transform: translateX(100px) rotate(10deg);
+            z-index: 2;
+        }
+
+        .phone-showcase:hover .phone-card:nth-child(1) {
+            transform: translateX(-120px) rotate(-15deg);
+        }
+
+        .phone-showcase:hover .phone-card:nth-child(3) {
+            transform: translateX(120px) rotate(15deg);
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 3rem 5%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .search-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box-container {
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .search-box {
+            display: flex;
+            background: var(--secondary);
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            color: var(--text-muted);
+            font-size: 1.3rem;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 1.2rem 0;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .search-btn:hover {
+            background: var(--accent-light);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .filter-group {
+            position: relative;
+        }
+
+        .filter-btn {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .filter-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.5rem;
+            min-width: 200px;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .filter-dropdown.show {
+            display: block;
+        }
+
+        .filter-option {
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-option:hover {
+            background: var(--accent);
+        }
+
+        /* Products Grid */
+        .products {
+            padding: 2rem 5% 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .products-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-card:hover::before {
+            opacity: 1;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--success);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+
+        .product-badge.new {
+            background: var(--warning);
+        }
+
+        .product-badge.hot {
+            background: #EF4444;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(51, 65, 85, 0.3));
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .product-brand {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-specs {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .spec {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-light);
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-left: 0.5rem;
+        }
+
+        .add-cart-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-cart-btn:hover {
+            background: var(--accent-light);
+            transform: scale(1.05);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin: 0.5rem 0;
+        }
+
+        .stars {
+            color: var(--warning);
+        }
+
+        .rating-count {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        .no-results h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-results p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .phone-showcase {
+                height: 400px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .search-header h2 {
+                font-size: 2rem;
+            }
+
+            .filters {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">TechVault</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#phones">Phones</a></li>
+                <li><a href="#laptops">Laptops</a></li>
+                <li><a href="#accessories">Accessories</a></li>
+                <li><a href="#deals">Deals</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="icon-btn">👤</button>
+                <button class="icon-btn" style="position: relative;">
+                    🛒
+                    <span class="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Next-Gen Tech at Your Fingertips</h1>
+                <p>Discover the latest smartphones, laptops, and electronics from top brands. Premium quality, cutting-edge technology, delivered to your door.</p>
+                <div class="hero-cta">
+                    <button class="btn-primary" onclick="document.getElementById('search-input').focus()">Explore Now</button>
+                    <button class="btn-secondary">View Deals</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-showcase">
+                    <div class="phone-card"></div>
+                    <div class="phone-card"></div>
+                    <div class="phone-card"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section" id="phones">
+        <div class="search-container">
+            <div class="search-header">
+                <h2>Find Your Perfect Device</h2>
+            </div>
+            
+            <div class="search-box-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search for phones, brands, or models...">
+                    <button class="search-btn" onclick="searchProducts()">Search</button>
+                </div>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <button class="filter-btn" onclick="toggleFilter('brand-filter')">
+                        Brand <span>▼</span>
+                    </button>
+                    <div class="filter-dropdown" id="brand-filter">
+                        <div class="filter-option" onclick="filterByBrand('all')">All Brands</div>
+                        <div class="filter-option" onclick="filterByBrand('Apple')">Apple</div>
+                        <div class="filter-option" onclick="filterByBrand('Samsung')">Samsung</div>
+                        <div class="filter-option" onclick="filterByBrand('Google')">Google</div>
+                        <div class="filter-option" onclick="filterByBrand('OnePlus')">OnePlus</div>
+                        <div class="filter-option" onclick="filterByBrand('Xiaomi')">Xiaomi</div>
+                        <div class="filter-option" onclick="filterByBrand('Realme')">Realme</div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-btn" onclick="toggleFilter('price-filter')">
+                        Price Range <span>▼</span>
+                    </button>
+                    <div class="filter-dropdown" id="price-filter">
+                        <div class="filter-option" onclick="filterByPrice('all')">All Prices</div>
+                        <div class="filter-option" onclick="filterByPrice('under-20k')">Under ₹20,000</div>
+                        <div class="filter-option" onclick="filterByPrice('20k-40k')">₹20,000 - ₹40,000</div>
+                        <div class="filter-option" onclick="filterByPrice('40k-60k')">₹40,000 - ₹60,000</div>
+                        <div class="filter-option" onclick="filterByPrice('above-60k')">Above ₹60,000</div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-btn" onclick="toggleFilter('ram-filter')">
+                        RAM <span>▼</span>
+                    </button>
+                    <div class="filter-dropdown" id="ram-filter">
+                        <div class="filter-option" onclick="filterByRAM('all')">All</div>
+                        <div class="filter-option" onclick="filterByRAM('4GB')">4GB</div>
+                        <div class="filter-option" onclick="filterByRAM('6GB')">6GB</div>
+                        <div class="filter-option" onclick="filterByRAM('8GB')">8GB</div>
+                        <div class="filter-option" onclick="filterByRAM('12GB')">12GB</div>
+                    </div>
+                </div>
+
+                <button class="filter-btn" onclick="sortProducts('price-low')">Price: Low to High</button>
+                <button class="filter-btn" onclick="sortProducts('price-high')">Price: High to Low</button>
+                <button class="filter-btn" onclick="resetFilters()">Reset Filters</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products">
+        <div class="products-container">
+            <div class="products-grid" id="products-grid">
+                <!-- Products will be dynamically inserted here -->
+            </div>
+            <div class="no-results" id="no-results">
+                <h3>No Products Found</h3>
+                <p>Try adjusting your search or filters</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Product Database
+        const products = [
+            {
+                id: 1,
+                name: "iPhone 15 Pro Max",
+                brand: "Apple",
+                price: 134900,
+                oldPrice: 159900,
+                ram: "8GB",
+                storage: "256GB",
+                rating: 4.9,
+                reviews: 2847,
+                badge: "hot",
+                specs: ["A17 Pro", "6.7\" OLED", "48MP Camera"]
+            },
+            {
+                id: 2,
+                name: "Galaxy S24 Ultra",
+                brand: "Samsung",
+                price: 129999,
+                oldPrice: 144999,
+                ram: "12GB",
+                storage: "512GB",
+                rating: 4.8,
+                reviews: 1923,
+                badge: "new",
+                specs: ["Snapdragon 8 Gen 3", "6.8\" AMOLED", "200MP Camera"]
+            },
+            {
+                id: 3,
+                name: "Pixel 8 Pro",
+                brand: "Google",
+                price: 84999,
+                oldPrice: 99999,
+                ram: "12GB",
+                storage: "256GB",
+                rating: 4.7,
+                reviews: 1456,
+                badge: "sale",
+                specs: ["Tensor G3", "6.7\" LTPO", "50MP Camera"]
+            },
+            {
+                id: 4,
+                name: "OnePlus 12",
+                brand: "OnePlus",
+                price: 64999,
+                oldPrice: 74999,
+                ram: "12GB",
+                storage: "256GB",
+                rating: 4.6,
+                reviews: 1834,
+                badge: "new",
+                specs: ["Snapdragon 8 Gen 3", "6.82\" AMOLED", "50MP Camera"]
+            },
+            {
+                id: 5,
+                name: "iPhone 14",
+                brand: "Apple",
+                price: 69900,
+                oldPrice: 79900,
+                ram: "6GB",
+                storage: "128GB",
+                rating: 4.7,
+                reviews: 3421,
+                badge: "sale",
+                specs: ["A15 Bionic", "6.1\" OLED", "12MP Camera"]
+            },
+            {
+                id: 6,
+                name: "Galaxy S23 FE",
+                brand: "Samsung",
+                price: 54999,
+                oldPrice: 64999,
+                ram: "8GB",
+                storage: "256GB",
+                rating: 4.5,
+                reviews: 987,
+                badge: "sale",
+                specs: ["Exynos 2200", "6.4\" AMOLED", "50MP Camera"]
+            },
+            {
+                id: 7,
+                name: "Xiaomi 14",
+                brand: "Xiaomi",
+                price: 54999,
+                oldPrice: null,
+                ram: "8GB",
+                storage: "256GB",
+                rating: 4.4,
+                reviews: 756,
+                badge: "new",
+                specs: ["Snapdragon 8 Gen 3", "6.36\" AMOLED", "50MP Camera"]
+            },
+            {
+                id: 8,
+                name: "OnePlus 11R",
+                brand: "OnePlus",
+                price: 39999,
+                oldPrice: 44999,
+                ram: "8GB",
+                storage: "128GB",
+                rating: 4.5,
+                reviews: 1234,
+                badge: "sale",
+                specs: ["Snapdragon 8+ Gen 1", "6.74\" AMOLED", "50MP Camera"]
+            },
+            {
+                id: 9,
+                name: "Realme GT 5 Pro",
+                brand: "Realme",
+                price: 42999,
+                oldPrice: null,
+                ram: "12GB",
+                storage: "256GB",
+                rating: 4.3,
+                reviews: 645,
+                badge: "new",
+                specs: ["Snapdragon 8 Gen 3", "6.78\" AMOLED", "50MP Camera"]
+            },
+            {
+                id: 10,
+                name: "Pixel 7a",
+                brand: "Google",
+                price: 39999,
+                oldPrice: 43999,
+                ram: "8GB",
+                storage: "128GB",
+                rating: 4.6,
+                reviews: 2341,
+                badge: "sale",
+                specs: ["Tensor G2", "6.1\" OLED", "64MP Camera"]
+            },
+            {
+                id: 11,
+                name: "Xiaomi 13 Pro",
+                brand: "Xiaomi",
+                price: 79999,
+                oldPrice: 89999,
+                ram: "12GB",
+                storage: "256GB",
+                rating: 4.5,
+                reviews: 892,
+                badge: "sale",
+                specs: ["Snapdragon 8 Gen 2", "6.73\" AMOLED", "50MP Camera"]
+            },
+            {
+                id: 12,
+                name: "Realme 12 Pro+",
+                brand: "Realme",
+                price: 29999,
+                oldPrice: null,
+                ram: "8GB",
+                storage: "256GB",
+                rating: 4.4,
+                reviews: 1567,
+                badge: "hot",
+                specs: ["Snapdragon 7s Gen 2", "6.7\" AMOLED", "50MP Camera"]
+            },
+            {
+                id: 13,
+                name: "iPhone 13",
+                brand: "Apple",
+                price: 59900,
+                oldPrice: 69900,
+                ram: "4GB",
+                storage: "128GB",
+                rating: 4.8,
+                reviews: 4521,
+                badge: "sale",
+                specs: ["A15 Bionic", "6.1\" OLED", "12MP Camera"]
+            },
+            {
+                id: 14,
+                name: "Galaxy A54 5G",
+                brand: "Samsung",
+                price: 36999,
+                oldPrice: 42999,
+                ram: "8GB",
+                storage: "256GB",
+                rating: 4.4,
+                reviews: 2134,
+                badge: "sale",
+                specs: ["Exynos 1380", "6.4\" AMOLED", "50MP Camera"]
+            },
+            {
+                id: 15,
+                name: "OnePlus Nord 3",
+                brand: "OnePlus",
+                price: 29999,
+                oldPrice: 33999,
+                ram: "8GB",
+                storage: "128GB",
+                rating: 4.3,
+                reviews: 1876,
+                badge: "sale",
+                specs: ["Dimensity 9000", "6.74\" AMOLED", "50MP Camera"]
+            }
+        ];
+
+        let filteredProducts = [...products];
+        let currentFilters = {
+            brand: 'all',
+            price: 'all',
+            ram: 'all'
+        };
+
+        // Initialize
+        renderProducts(filteredProducts);
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', searchProducts);
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.brand.toLowerCase().includes(searchTerm) ||
+                product.specs.some(spec => spec.toLowerCase().includes(searchTerm))
+            );
+            applyFilters();
+        }
+
+        // Filter functions
+        function toggleFilter(filterId) {
+            const dropdown = document.getElementById(filterId);
+            const allDropdowns = document.querySelectorAll('.filter-dropdown');
+            
+            allDropdowns.forEach(d => {
+                if (d.id !== filterId) d.classList.remove('show');
+            });
+            
+            dropdown.classList.toggle('show');
+        }
+
+        function filterByBrand(brand) {
+            currentFilters.brand = brand;
+            applyFilters();
+            toggleFilter('brand-filter');
+        }
+
+        function filterByPrice(range) {
+            currentFilters.price = range;
+            applyFilters();
+            toggleFilter('price-filter');
+        }
+
+        function filterByRAM(ram) {
+            currentFilters.ram = ram;
+            applyFilters();
+            toggleFilter('ram-filter');
+        }
+
+        function applyFilters() {
+            let result = [...filteredProducts];
+
+            // Brand filter
+            if (currentFilters.brand !== 'all') {
+                result = result.filter(p => p.brand === currentFilters.brand);
+            }
+
+            // Price filter
+            if (currentFilters.price !== 'all') {
+                result = result.filter(p => {
+                    switch(currentFilters.price) {
+                        case 'under-20k': return p.price < 20000;
+                        case '20k-40k': return p.price >= 20000 && p.price < 40000;
+                        case '40k-60k': return p.price >= 40000 && p.price < 60000;
+                        case 'above-60k': return p.price >= 60000;
+                        default: return true;
+                    }
+                });
+            }
+
+            // RAM filter
+            if (currentFilters.ram !== 'all') {
+                result = result.filter(p => p.ram === currentFilters.ram);
+            }
+
+            renderProducts(result);
+        }
+
+        function sortProducts(sortType) {
+            if (sortType === 'price-low') {
+                filteredProducts.sort((a, b) => a.price - b.price);
+            } else if (sortType === 'price-high') {
+                filteredProducts.sort((a, b) => b.price - a.price);
+            }
+            renderProducts(filteredProducts);
+        }
+
+        function resetFilters() {
+            currentFilters = { brand: 'all', price: 'all', ram: 'all' };
+            document.getElementById('search-input').value = '';
+            filteredProducts = [...products];
+            renderProducts(filteredProducts);
+        }
+
+        // Render products
+        function renderProducts(productList) {
+            const grid = document.getElementById('products-grid');
+            const noResults = document.getElementById('no-results');
+
+            if (productList.length === 0) {
+                grid.style.display = 'none';
+                noResults.classList.add('show');
+                return;
+            }
+
+            grid.style.display = 'grid';
+            noResults.classList.remove('show');
+
+            grid.innerHTML = productList.map(product => `
+                <div class="product-card" data-product-id="${product.id}">
+                    ${product.badge ? `<div class="product-badge ${product.badge}">${product.badge}</div>` : ''}
+                    <div class="product-image">
+                        <svg width="200" height="250" viewBox="0 0 200 250">
+                            <rect x="40" y="20" width="120" height="210" rx="20" fill="#1E293B" stroke="#3B82F6" stroke-width="3"/>
+                            <rect x="50" y="30" width="100" height="180" rx="5" fill="#0F172A"/>
+                            <circle cx="100" cy="225" r="8" fill="#334155"/>
+                        </svg>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">${product.brand}</div>
+                        <h3>${product.name}</h3>
+                        <div class="rating">
+                            <span class="stars">${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5-Math.floor(product.rating))}</span>
+                            <span class="rating-count">(${product.reviews.toLocaleString()})</span>
+                        </div>
+                        <div class="product-specs">
+                            ${product.specs.map(spec => `<span class="spec">${spec}</span>`).join('')}
+                            <span class="spec">${product.ram} RAM</span>
+                            <span class="spec">${product.storage}</span>
+                        </div>
+                        <div class="product-footer">
+                            <div>
+                                <span class="price">₹${product.price.toLocaleString()}</span>
+                                ${product.oldPrice ? `<span class="old-price">₹${product.oldPrice.toLocaleString()}</span>` : ''}
+                            </div>
+                            <button class="add-cart-btn" onclick="addToCart(${product.id})">
+                                🛒 Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add to cart
+        function addToCart(productId) {
+            const cartCount = document.querySelector('.cart-count');
+            let count = parseInt(cartCount.textContent);
+            cartCount.textContent = count + 1;
+
+            // Find the button and animate it
+            const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+            const btn = productCard.querySelector('.add-cart-btn');
+            
+            btn.innerHTML = '✓ Added';
+            btn.style.background = '#10B981';
+            
+            setTimeout(() => {
+                btn.innerHTML = '🛒 Add';
+                btn.style.background = '';
+            }, 1500);
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.filter-group')) {
+                document.querySelectorAll('.filter-dropdown').forEach(d => {
+                    d.classList.remove('show');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
