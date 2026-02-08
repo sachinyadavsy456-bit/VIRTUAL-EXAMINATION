@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChefAI - Your AI Cooking Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2D1B00;
+            --secondary: #D4A574;
+            --accent: #E8751A;
+            --success: #52B788;
+            --cream: #FFF8F0;
+            --warm: #F4E9DC;
+            --text-dark: #1A1A1A;
+            --text-muted: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Decorative Background */
+        .bg-pattern {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: 
+                repeating-linear-gradient(45deg, var(--primary) 0px, var(--primary) 2px, transparent 2px, transparent 10px);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 248, 240, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--secondary);
+            z-index: 1000;
+            padding: 1.5rem 5%;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 90px;
+            padding: 5rem 5% 4rem;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--warm) 0%, var(--cream) 100%);
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--accent), #FF9B54);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease-out 0.1s backwards;
+        }
+
+        /* Search Box */
+        .search-section {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            display: flex;
+            background: white;
+            border: 3px solid var(--secondary);
+            border-radius: 60px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(212, 165, 116, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 15px 50px rgba(232, 117, 26, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 1.5rem 2rem;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            outline: none;
+            color: var(--text-dark);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1.5rem 3rem;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-btn:hover {
+            background: #FF9B54;
+        }
+
+        .quick-searches {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .quick-tag {
+            background: white;
+            border: 2px solid var(--secondary);
+            color: var(--text-dark);
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-tag:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* AI Response Section */
+        .ai-response {
+            padding: 3rem 5%;
+            position: relative;
+            z-index: 1;
+            display: none;
+        }
+
+        .ai-response.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .response-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .thinking-indicator {
+            text-align: center;
+            padding: 3rem;
+            display: none;
+        }
+
+        .thinking-indicator.show {
+            display: block;
+        }
+
+        .thinking-dots {
+            display: inline-flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: bounce-dot 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce-dot {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .recipe-card {
+            background: white;
+            border: 3px solid var(--secondary);
+            border-radius: 30px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .recipe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--warm);
+        }
+
+        .recipe-title {
+            flex: 1;
+        }
+
+        .recipe-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .meta-icon {
+            font-size: 1.3rem;
+        }
+
+        .difficulty-badge {
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            align-self: start;
+        }
+
+        .difficulty-badge.medium {
+            background: var(--accent);
+        }
+
+        .difficulty-badge.hard {
+            background: #E63946;
+        }
+
+        .recipe-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .ingredient-item {
+            background: var(--warm);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .ingredient-item:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .ingredient-check {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ingredient-item:hover .ingredient-check {
+            background: var(--accent);
+        }
+
+        .steps-list {
+            counter-reset: step-counter;
+        }
+
+        .step-item {
+            position: relative;
+            padding: 1.5rem 1.5rem 1.5rem 5rem;
+            margin-bottom: 1.5rem;
+            background: var(--warm);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .step-item::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-text {
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #FFF8F0, #FFE8CC);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            border-left: 5px solid var(--accent);
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 5%;
+            background: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--warm);
+            padding: 2.5rem;
+            border-radius: 25px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 3px solid transparent;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(232, 117, 26, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            animation: float-icon 3s ease-in-out infinite;
+        }
+
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            animation-delay: 0.3s;
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            animation-delay: 0.6s;
+        }
+
+        .feature-card:nth-child(4) .feature-icon {
+            animation-delay: 0.9s;
+        }
+
+        .feature-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Popular Recipes */
+        .popular-recipes {
+            padding: 5rem 5%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .popular-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .popular-container h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 3rem;
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .recipe-preview {
+            background: white;
+            border: 3px solid var(--secondary);
+            border-radius: 25px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .recipe-preview:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--warm), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .recipe-preview-content {
+            padding: 1.5rem;
+        }
+
+        .recipe-preview h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .recipe-preview-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--cream);
+            padding: 3rem 5% 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .recipe-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .ingredients-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .recipe-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">👨‍🍳</span>
+                ChefAI
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#recipes">Recipes</a></li>
+                <li><a href="#cuisines">Cuisines</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="ai-badge">
+                ✨ Powered by AI
+            </div>
+            <h1>Cook Anything with AI</h1>
+            <p class="hero-subtitle">Search for any dish and get instant recipes, cooking tips, and step-by-step instructions</p>
+
+            <div class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input 
+                            type="text" 
+                            id="food-search" 
+                            class="search-input" 
+                            placeholder="What would you like to cook today? (e.g., pasta, biryani, cake...)"
+                            autocomplete="off"
+                        >
+                        <button class="search-btn" onclick="searchRecipe()">
+                            <span>🔍</span>
+                            <span>Find Recipe</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="quick-searches">
+                    <div class="quick-tag" onclick="quickSearch('Chicken Curry')">🍛 Chicken Curry</div>
+                    <div class="quick-tag" onclick="quickSearch('Pasta Carbonara')">🍝 Pasta Carbonara</div>
+                    <div class="quick-tag" onclick="quickSearch('Chocolate Cake')">🍰 Chocolate Cake</div>
+                    <div class="quick-tag" onclick="quickSearch('Fried Rice')">🍚 Fried Rice</div>
+                    <div class="quick-tag" onclick="quickSearch('Pizza')">🍕 Pizza</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Response Section -->
+    <section class="ai-response" id="ai-response">
+        <div class="response-container">
+            <div class="thinking-indicator" id="thinking">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--primary);">
+                    AI Chef is cooking up your recipe...
+                </h3>
+                <div class="thinking-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+
+            <div id="recipe-result"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <h2>Why Cook with AI?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Recipes</h3>
+                    <p>Get instant, personalized recipes for any dish you can imagine, tailored to your taste and skill level.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Search any food and get complete recipes with ingredients and steps in seconds.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Global Cuisines</h3>
+                    <p>Explore recipes from around the world - Italian, Indian, Chinese, Mexican, and more!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Smart Tips</h3>
+                    <p>Get expert cooking tips, substitutions, and variations for every recipe.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Recipes -->
+    <section class="popular-recipes" id="recipes">
+        <div class="popular-container">
+            <h2>Popular Recipes</h2>
+            <div class="recipes-grid">
+                <div class="recipe-preview" onclick="quickSearch('Butter Chicken')">
+                    <div class="recipe-image">🍗</div>
+                    <div class="recipe-preview-content">
+                        <h3>Butter Chicken</h3>
+                        <p style="color: var(--text-muted);">Creamy Indian curry with tender chicken</p>
+                        <div class="recipe-preview-meta">
+                            <span>⏱️ 45 min</span>
+                            <span>👥 4 servings</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-preview" onclick="quickSearch('Spaghetti Aglio e Olio')">
+                    <div class="recipe-image">🍝</div>
+                    <div class="recipe-preview-content">
+                        <h3>Spaghetti Aglio e Olio</h3>
+                        <p style="color: var(--text-muted);">Classic Italian garlic pasta</p>
+                        <div class="recipe-preview-meta">
+                            <span>⏱️ 20 min</span>
+                            <span>👥 2 servings</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-preview" onclick="quickSearch('Vegetable Biryani')">
+                    <div class="recipe-image">🍛</div>
+                    <div class="recipe-preview-content">
+                        <h3>Vegetable Biryani</h3>
+                        <p style="color: var(--text-muted);">Fragrant rice with mixed vegetables</p>
+                        <div class="recipe-preview-meta">
+                            <span>⏱️ 60 min</span>
+                            <span>👥 6 servings</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-preview" onclick="quickSearch('Pancakes')">
+                    <div class="recipe-image">🥞</div>
+                    <div class="recipe-preview-content">
+                        <h3>Fluffy Pancakes</h3>
+                        <p style="color: var(--text-muted);">Perfect breakfast pancakes</p>
+                        <div class="recipe-preview-meta">
+                            <span>⏱️ 15 min</span>
+                            <span>👥 4 servings</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-preview" onclick="quickSearch('Pad Thai')">
+                    <div class="recipe-image">🍜</div>
+                    <div class="recipe-preview-content">
+                        <h3>Pad Thai</h3>
+                        <p style="color: var(--text-muted);">Thai stir-fried rice noodles</p>
+                        <div class="recipe-preview-meta">
+                            <span>⏱️ 30 min</span>
+                            <span>👥 3 servings</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-preview" onclick="quickSearch('Tiramisu')">
+                    <div class="recipe-image">🍰</div>
+                    <div class="recipe-preview-content">
+                        <h3>Tiramisu</h3>
+                        <p style="color: var(--text-muted);">Classic Italian coffee dessert</p>
+                        <div class="recipe-preview-meta">
+                            <span>⏱️ 30 min + chill</span>
+                            <span>👥 8 servings</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1rem;">
+                👨‍🍳 ChefAI
+            </h3>
+            <p style="margin-bottom: 2rem; opacity: 0.8;">
+                Your AI-powered cooking companion. Discover, learn, and master any recipe.
+            </p>
+            <p style="opacity: 0.6;">
+                © 2026 ChefAI. Made with ❤️ for food lovers everywhere.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Recipe Database - Comprehensive collection
+        const recipeDatabase = {
+            // Indian Cuisine
+            "chicken curry": {
+                name: "Chicken Curry",
+                difficulty: "medium",
+                time: "50 minutes",
+                servings: "4",
+                description: "A rich and aromatic Indian curry with tender chicken pieces in a flavorful tomato-based gravy with traditional spices.",
+                ingredients: [
+                    "500g chicken (cut into pieces)",
+                    "2 large onions (finely chopped)",
+                    "3 tomatoes (pureed)",
+                    "2 tbsp ginger-garlic paste",
+                    "1 tsp turmeric powder",
+                    "2 tsp coriander powder",
+                    "1 tsp cumin powder",
+                    "1 tsp red chili powder",
+                    "1 tsp garam masala",
+                    "3 tbsp cooking oil",
+                    "Fresh cilantro for garnish",
+                    "Salt to taste"
+                ],
+                steps: [
+                    "Heat oil in a large pan over medium heat. Add chopped onions and sauté until golden brown (8-10 minutes).",
+                    "Add ginger-garlic paste and cook for 2 minutes until the raw smell disappears.",
+                    "Add turmeric, coriander, cumin, and red chili powder. Mix well and cook for 1 minute.",
+                    "Add tomato puree and cook until oil separates from the mixture (about 8-10 minutes).",
+                    "Add chicken pieces and mix well to coat with the masala. Cook for 5 minutes.",
+                    "Add 1 cup water, salt to taste, and bring to a boil. Reduce heat and simmer covered for 20-25 minutes until chicken is fully cooked.",
+                    "Sprinkle garam masala and simmer for 2 more minutes.",
+                    "Garnish with fresh cilantro and serve hot with rice or naan."
+                ],
+                tips: [
+                    "For a richer curry, add 2 tbsp cream or yogurt at the end",
+                    "Marinating chicken with yogurt for 30 minutes makes it more tender",
+                    "Adjust spice levels according to your preference"
+                ]
+            },
+            "butter chicken": {
+                name: "Butter Chicken",
+                difficulty: "medium",
+                time: "45 minutes",
+                servings: "4",
+                description: "A creamy, mild Indian curry with succulent chicken in a rich tomato-butter sauce.",
+                ingredients: [
+                    "500g boneless chicken (cubed)",
+                    "1 cup yogurt",
+                    "1 tsp kashmiri red chili powder",
+                    "1 tsp garam masala",
+                    "2 tbsp ginger-garlic paste",
+                    "3 tomatoes (pureed)",
+                    "4 tbsp butter",
+                    "1/2 cup heavy cream",
+                    "1 tbsp kasuri methi (dried fenugreek)",
+                    "2 tbsp honey or sugar",
+                    "Salt to taste"
+                ],
+                steps: [
+                    "Marinate chicken with yogurt, half the ginger-garlic paste, chili powder, and salt for 30 minutes.",
+                    "Grill or pan-fry marinated chicken until cooked through. Set aside.",
+                    "In a pan, melt butter and add remaining ginger-garlic paste. Sauté for 1 minute.",
+                    "Add tomato puree and cook for 10 minutes until thick.",
+                    "Add garam masala, kasuri methi, honey, and salt. Mix well.",
+                    "Add heavy cream and stir until well combined.",
+                    "Add cooked chicken pieces and simmer for 5 minutes.",
+                    "Garnish with cream and serve with naan or rice."
+                ],
+                tips: [
+                    "Crush kasuri methi between your palms before adding for better aroma",
+                    "Use bone-in chicken for more flavor",
+                    "Add a pinch of cardamom powder for authentic taste"
+                ]
+            },
+            "biryani": {
+                name: "Vegetable Biryani",
+                difficulty: "hard",
+                time: "60 minutes",
+                servings: "6",
+                description: "Aromatic basmati rice layered with spiced vegetables, a fragrant and colorful one-pot meal.",
+                ingredients: [
+                    "2 cups basmati rice",
+                    "Mixed vegetables (carrots, peas, beans, potato) - 3 cups",
+                    "2 onions (thinly sliced)",
+                    "1 cup yogurt",
+                    "2 tbsp biryani masala",
+                    "1 tsp turmeric",
+                    "4 tbsp ghee or oil",
+                    "Whole spices (bay leaves, cinnamon, cardamom, cloves)",
+                    "Saffron strands soaked in milk",
+                    "Fresh mint and cilantro",
+                    "Salt to taste"
+                ],
+                steps: [
+                    "Soak rice for 30 minutes. Boil with whole spices until 70% cooked. Drain and set aside.",
+                    "Heat ghee in a heavy-bottomed pot. Fry sliced onions until golden brown. Remove half for garnish.",
+                    "Add vegetables, yogurt, biryani masala, turmeric, and salt. Cook for 10 minutes.",
+                    "Layer half the rice over vegetables. Sprinkle mint, cilantro, and fried onions.",
+                    "Add remaining rice as second layer. Pour saffron milk on top.",
+                    "Cover tightly and cook on low heat for 20 minutes (dum cooking).",
+                    "Let it rest for 5 minutes before opening.",
+                    "Gently mix and serve hot with raita."
+                ],
+                tips: [
+                    "Use aged basmati rice for best results",
+                    "Seal the lid with dough for perfect dum",
+                    "Add fried cashews and raisins for richness"
+                ]
+            },
+
+            // Italian Cuisine
+            "pasta carbonara": {
+                name: "Pasta Carbonara",
+                difficulty: "easy",
+                time: "20 minutes",
+                servings: "2",
+                description: "Classic Roman pasta with eggs, cheese, and crispy pancetta in a creamy sauce.",
+                ingredients: [
+                    "200g spaghetti",
+                    "100g pancetta or bacon (diced)",
+                    "2 large eggs",
+                    "50g Parmesan cheese (grated)",
+                    "2 cloves garlic (minced)",
+                    "Black pepper (freshly ground)",
+                    "Salt for pasta water"
+                ],
+                steps: [
+                    "Boil salted water and cook spaghetti according to package directions until al dente.",
+                    "While pasta cooks, fry pancetta in a pan until crispy. Add minced garlic and cook for 1 minute.",
+                    "In a bowl, whisk together eggs and Parmesan cheese.",
+                    "Reserve 1 cup pasta water, then drain pasta.",
+                    "Remove pan from heat. Add hot pasta to pancetta and toss.",
+                    "Quickly add egg mixture and toss vigorously. Add pasta water gradually to create creamy sauce.",
+                    "Season with black pepper and serve immediately with extra Parmesan."
+                ],
+                tips: [
+                    "Never add eggs on direct heat to avoid scrambling",
+                    "Use room temperature eggs for best results",
+                    "Pecorino Romano can replace Parmesan for authentic flavor"
+                ]
+            },
+            "pizza": {
+                name: "Homemade Pizza",
+                difficulty: "medium",
+                time: "90 minutes (including rise time)",
+                servings: "4",
+                description: "Classic Italian pizza with homemade dough, tomato sauce, and your favorite toppings.",
+                ingredients: [
+                    "For Dough: 3 cups all-purpose flour, 1 tsp salt, 1 tbsp sugar, 2 tsp instant yeast, 2 tbsp olive oil, 1 cup warm water",
+                    "For Sauce: 400g crushed tomatoes, 2 cloves garlic, 1 tsp oregano, salt, pepper",
+                    "Toppings: Mozzarella cheese, basil, your choice of vegetables/meats"
+                ],
+                steps: [
+                    "Mix flour, salt, sugar, and yeast. Add olive oil and warm water. Knead for 10 minutes until smooth.",
+                    "Let dough rise in oiled bowl covered for 1 hour until doubled.",
+                    "For sauce: Sauté garlic, add crushed tomatoes, oregano, salt, pepper. Simmer for 15 minutes.",
+                    "Preheat oven to 475°F (245°C). Oil a pizza pan or baking sheet.",
+                    "Punch down dough and roll into pizza shape. Place on pan.",
+                    "Spread sauce, add cheese and toppings.",
+                    "Bake for 12-15 minutes until crust is golden and cheese bubbles.",
+                    "Let cool for 2 minutes, slice and serve."
+                ],
+                tips: [
+                    "Use a pizza stone for crispier crust",
+                    "Don't overload with toppings or it will be soggy",
+                    "Brush crust with garlic butter for extra flavor"
+                ]
+            },
+
+            // Asian Cuisine
+            "fried rice": {
+                name: "Vegetable Fried Rice",
+                difficulty: "easy",
+                time: "25 minutes",
+                servings: "3",
+                description: "Quick and flavorful Asian-style fried rice with vegetables and soy sauce.",
+                ingredients: [
+                    "3 cups cooked rice (day-old is best)",
+                    "2 eggs (beaten)",
+                    "1 cup mixed vegetables (carrots, peas, corn)",
+                    "3 green onions (chopped)",
+                    "2 cloves garlic (minced)",
+                    "3 tbsp soy sauce",
+                    "1 tbsp sesame oil",
+                    "2 tbsp vegetable oil",
+                    "Salt and pepper to taste"
+                ],
+                steps: [
+                    "Heat 1 tbsp oil in a wok over high heat. Scramble eggs and set aside.",
+                    "Add remaining oil. Stir-fry garlic for 30 seconds.",
+                    "Add vegetables and stir-fry for 3-4 minutes until tender-crisp.",
+                    "Add rice and break up any clumps. Stir-fry for 3-4 minutes.",
+                    "Add soy sauce and sesame oil. Toss everything together.",
+                    "Add scrambled eggs and green onions. Mix well.",
+                    "Season with salt and pepper. Serve hot."
+                ],
+                tips: [
+                    "Use cold, day-old rice for best texture",
+                    "Keep heat high for that 'wok hei' flavor",
+                    "Add protein like chicken or shrimp if desired"
+                ]
+            },
+            "pad thai": {
+                name: "Pad Thai",
+                difficulty: "medium",
+                time: "30 minutes",
+                servings: "3",
+                description: "Thailand's famous stir-fried rice noodles with tangy-sweet sauce, peanuts, and lime.",
+                ingredients: [
+                    "200g rice noodles",
+                    "2 eggs",
+                    "200g shrimp or chicken",
+                    "2 cloves garlic (minced)",
+                    "1/4 cup fish sauce",
+                    "3 tbsp tamarind paste",
+                    "2 tbsp sugar",
+                    "Bean sprouts",
+                    "Roasted peanuts (crushed)",
+                    "Lime wedges",
+                    "Green onions"
+                ],
+                steps: [
+                    "Soak rice noodles in warm water for 30 minutes until soft. Drain.",
+                    "Mix fish sauce, tamarind paste, and sugar for the sauce.",
+                    "Heat oil in wok. Scramble eggs and set aside.",
+                    "Stir-fry garlic and protein until cooked.",
+                    "Add noodles and sauce. Toss for 2-3 minutes.",
+                    "Add eggs back, half the peanuts, and bean sprouts.",
+                    "Serve topped with remaining peanuts, lime, and green onions."
+                ],
+                tips: [
+                    "Don't oversoak noodles or they'll be mushy",
+                    "High heat is essential for authentic flavor",
+                    "Adjust sweetness and tang to your preference"
+                ]
+            },
+
+            // Desserts
+            "chocolate cake": {
+                name: "Chocolate Cake",
+                difficulty: "medium",
+                time: "60 minutes",
+                servings: "8",
+                description: "Rich, moist chocolate cake with decadent chocolate frosting.",
+                ingredients: [
+                    "For Cake: 2 cups flour, 2 cups sugar, 3/4 cup cocoa powder, 2 tsp baking soda, 1 tsp salt, 2 eggs, 1 cup buttermilk, 1 cup hot coffee, 1/2 cup oil",
+                    "For Frosting: 1 cup butter, 1 cup cocoa powder, 4 cups powdered sugar, 1/2 cup milk, 2 tsp vanilla"
+                ],
+                steps: [
+                    "Preheat oven to 350°F (175°C). Grease two 9-inch round pans.",
+                    "Mix flour, sugar, cocoa, baking soda, and salt.",
+                    "Add eggs, buttermilk, oil, and coffee. Beat for 2 minutes.",
+                    "Pour batter into pans. Bake for 30-35 minutes.",
+                    "Cool in pans for 10 minutes, then turn out onto wire rack.",
+                    "For frosting: Beat butter, add cocoa, then alternate powdered sugar and milk. Add vanilla.",
+                    "Frost cooled cake layers and enjoy!"
+                ],
+                tips: [
+                    "Coffee enhances chocolate flavor but doesn't taste in cake",
+                    "Don't skip buttermilk - it makes it extra moist",
+                    "Chill cake before frosting for easier spreading"
+                ]
+            },
+            "pancakes": {
+                name: "Fluffy Pancakes",
+                difficulty: "easy",
+                time: "15 minutes",
+                servings: "4",
+                description: "Light, fluffy American-style pancakes perfect for breakfast.",
+                ingredients: [
+                    "2 cups all-purpose flour",
+                    "2 tbsp sugar",
+                    "2 tsp baking powder",
+                    "1 tsp baking soda",
+                    "1/2 tsp salt",
+                    "2 cups buttermilk",
+                    "2 eggs",
+                    "1/4 cup melted butter",
+                    "1 tsp vanilla extract"
+                ],
+                steps: [
+                    "Mix flour, sugar, baking powder, baking soda, and salt in a bowl.",
+                    "In another bowl, whisk buttermilk, eggs, melted butter, and vanilla.",
+                    "Pour wet ingredients into dry and gently mix until just combined (lumps are okay!).",
+                    "Heat a greased griddle over medium heat.",
+                    "Pour 1/4 cup batter for each pancake.",
+                    "Cook until bubbles form on surface (2-3 minutes), then flip.",
+                    "Cook other side until golden brown (1-2 minutes).",
+                    "Serve hot with maple syrup and butter."
+                ],
+                tips: [
+                    "Don't overmix - lumpy batter makes fluffier pancakes",
+                    "Let batter rest for 5 minutes before cooking",
+                    "First pancake is often a test - adjust heat as needed"
+                ]
+            },
+            "tiramisu": {
+                name: "Tiramisu",
+                difficulty: "medium",
+                time: "30 minutes + 4 hours chill",
+                servings: "8",
+                description: "Classic Italian coffee-flavored dessert with layers of mascarpone cream and ladyfingers.",
+                ingredients: [
+                    "6 egg yolks",
+                    "3/4 cup sugar",
+                    "500g mascarpone cheese",
+                    "1 1/2 cups heavy cream",
+                    "2 cups strong espresso (cooled)",
+                    "3 tbsp coffee liqueur",
+                    "24 ladyfinger cookies",
+                    "Cocoa powder for dusting"
+                ],
+                steps: [
+                    "Whisk egg yolks and sugar in bowl over simmering water until thick and pale.",
+                    "Remove from heat, add mascarpone and beat until smooth.",
+                    "Whip cream to stiff peaks and fold into mascarpone mixture.",
+                    "Mix espresso and coffee liqueur in shallow dish.",
+                    "Quickly dip ladyfingers in coffee (don't soak!) and arrange in dish.",
+                    "Spread half the mascarpone cream over ladyfingers.",
+                    "Repeat with another layer of dipped ladyfingers and cream.",
+                    "Cover and refrigerate for at least 4 hours. Dust with cocoa before serving."
+                ],
+                tips: [
+                    "Use room temperature mascarpone for smoothest texture",
+                    "Don't oversoak ladyfingers or dessert will be soggy",
+                    "Make a day ahead for best flavor"
+                ]
+            }
+        };
+
+        // Search functionality
+        document.getElementById('food-search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchRecipe();
+            }
+        });
+
+        function quickSearch(food) {
+            document.getElementById('food-search').value = food;
+            searchRecipe();
+        }
+
+        function searchRecipe() {
+            const searchTerm = document.getElementById('food-search').value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                alert('Please enter a food item to search!');
+                return;
+            }
+
+            // Show AI response section and thinking indicator
+            const responseSection = document.getElementById('ai-response');
+            const thinking = document.getElementById('thinking');
+            const resultDiv = document.getElementById('recipe-result');
+            
+            responseSection.classList.add('show');
+            thinking.classList.add('show');
+            resultDiv.innerHTML = '';
+
+            // Scroll to response
+            responseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Simulate AI processing
+            setTimeout(() => {
+                thinking.classList.remove('show');
+                displayRecipe(searchTerm);
+            }, 2000);
+        }
+
+        function displayRecipe(searchTerm) {
+            const resultDiv = document.getElementById('recipe-result');
+            
+            // Find matching recipe
+            let recipe = null;
+            for (let key in recipeDatabase) {
+                if (searchTerm.includes(key) || key.includes(searchTerm)) {
+                    recipe = recipeDatabase[key];
+                    break;
+                }
+            }
+
+            // If no exact match, provide a generic response
+            if (!recipe) {
+                recipe = generateGenericRecipe(searchTerm);
+            }
+
+            const difficultyClass = recipe.difficulty.toLowerCase();
+            
+            resultDiv.innerHTML = `
+                <div class="recipe-card">
+                    <div class="recipe-header">
+                        <div class="recipe-title">
+                            <h2>${recipe.name}</h2>
+                            <div class="recipe-meta">
+                                <div class="meta-item">
+                                    <span class="meta-icon">⏱️</span>
+                                    <span>${recipe.time}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">👥</span>
+                                    <span>${recipe.servings} servings</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="difficulty-badge ${difficultyClass}">
+                            ${recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1)}
+                        </div>
+                    </div>
+
+                    <p class="recipe-description">${recipe.description}</p>
+
+                    <h3 class="section-title">🛒 Ingredients</h3>
+                    <div class="ingredients-grid">
+                        ${recipe.ingredients.map(ingredient => `
+                            <div class="ingredient-item">
+                                <div class="ingredient-check"></div>
+                                <span>${ingredient}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <h3 class="section-title">👨‍🍳 Instructions</h3>
+                    <div class="steps-list">
+                        ${recipe.steps.map(step => `
+                            <div class="step-item">
+                                <div class="step-text">${step}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="tips-section">
+                        <h3 class="section-title">💡 Chef's Tips</h3>
+                        ${recipe.tips.map(tip => `
+                            <div class="tip-item">
+                                <span>✨</span>
+                                <span>${tip}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateGenericRecipe(food) {
+            return {
+                name: food.charAt(0).toUpperCase() + food.slice(1),
+                difficulty: "medium",
+                time: "30-45 minutes",
+                servings: "4",
+                description: `A delicious ${food} recipe with fresh ingredients and traditional cooking methods.`,
+                ingredients: [
+                    "Main ingredient (as needed)",
+                    "Onions - 2 medium (chopped)",
+                    "Garlic - 3 cloves (minced)",
+                    "Cooking oil - 2 tbsp",
+                    "Salt and pepper to taste",
+                    "Fresh herbs for garnish",
+                    "Water or broth as needed"
+                ],
+                steps: [
+                    "Prepare all ingredients by washing, chopping, and measuring as needed.",
+                    "Heat oil in a large pan over medium heat.",
+                    "Sauté onions and garlic until fragrant and translucent.",
+                    "Add main ingredients and cook according to their specific requirements.",
+                    "Season with salt, pepper, and other spices to taste.",
+                    "Simmer or cook until everything is well combined and cooked through.",
+                    "Garnish with fresh herbs and serve hot.",
+                    "Enjoy your homemade dish!"
+                ],
+                tips: [
+                    "Adjust cooking time based on your specific ingredients",
+                    "Feel free to add your favorite vegetables or proteins",
+                    "Taste and adjust seasonings before serving"
+                ]
+            };
+        }
+    </script>
+</body>
+</html>
